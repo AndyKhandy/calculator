@@ -37,7 +37,10 @@ h1 {
     font-size: 40px;
     color: white;
     text-align: center;
+    margin: 10px;
 }
+
+
 
 .calculator .display {
     background-color: rgb(194, 212, 76);
