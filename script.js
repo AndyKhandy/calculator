@@ -4,12 +4,12 @@ const numbers = document.querySelectorAll(".num");
 const clear = document.querySelector("#clear");
 const operators = document.querySelectorAll(".op");
 const equal = document.querySelector("#equal");
-const ops = "+-X÷";
 
 let firstNum = null;
 let secondNum = null;
 let operator = null;
 let displayText = display.textContent;
+let second = false;
 
 function add(a,b)
 {
@@ -33,10 +33,13 @@ function divide(a,b)
 }
 
 
+
 function updateDisplay()
 {
     display.textContent = displayText || 0;
 }
+
+
 
 function operate()
 {
@@ -63,18 +66,35 @@ function operate()
 
 clear.addEventListener("click", () => {
     displayText = "0";
+    operator = null;
+    firstNum = null;
+    secondNum = null;
+    second = false;
     updateDisplay();
 });
 
 equal.addEventListener("click", ()=> {
     secondNum = +displayText;
-    operate(operator,firstNum,secondNum)
+    firstNum = operate(operator,firstNum,secondNum)
+    operator = null;
+    second = false;
 });
 
 
 numbers.forEach(btn => {
     btn.addEventListener("click", () => {
+       if(displayText == "0")
+       {
         displayText = btn.value;
+       }
+       else if(second)
+       {
+        displayText = btn.value;
+        second = false;
+       }
+       else{
+        displayText += btn.value;
+       }
         updateDisplay();
     });
 });
@@ -90,6 +110,7 @@ operators.forEach(btn => {
             secondNum = +displayText;
             firstNum = operate();
         }
+        second = true;
         operator = btn.value;
         displayText = btn.value;
         updateDisplay();
