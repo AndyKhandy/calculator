@@ -22,6 +22,7 @@ let totalDisplay = "";
 let firstOperation = true;
 let second = false;
 let didCalc = false;
+let newLine = false;
 
 let previousFirst = null;
 let previousSecond = null; 
@@ -45,8 +46,13 @@ function appendValue(value)
             displayText += value;
         }
         totalDisplay += value;
+        if(totalDisplay.length > 15)
+        {
+            totalDisplay = totalDisplay.slice(6);
+        }
         display.textContent = totalDisplay;
     }
+
 }
 
 function resetForNext()
@@ -71,6 +77,11 @@ numbers.forEach(btn => {
             displayText = "";
             second = false;
         }
+        if(newLine && (!totalDisplay.includes("ans")))
+        {
+            totalDisplay = "";
+            newLine = false;
+        }
         appendValue(btn.value);
     });
 });
@@ -83,6 +94,7 @@ operators.forEach(btn => {
             if(firstNum == "ans")
             {
                 firstNum = pastNum;
+                totalDisplay = "ans";
             }
             displayText = "";
         }
@@ -91,12 +103,13 @@ operators.forEach(btn => {
             operatorBtn.classList.toggle("active");
             secondNum = displayText;
             operate();
-            appendValue(firstNum);
         }
-        if(didCalc)
+        else if(didCalc)
         {
-            totalDisplay = `ans`;
+            totalDisplay = pastNum;
+            didCalc = false;
         }
+        decimal.disabled = false;
         operator = btn.value;
         second = true;
         operatorBtn = btn;
@@ -106,6 +119,10 @@ operators.forEach(btn => {
 });
 
 ans.addEventListener("click", ()=> {
+    if(didCalc)
+    {
+        totalDisplay = "";
+    }
     displayText = "";
     appendValue("ans");
 })
@@ -119,6 +136,7 @@ clear.addEventListener("click", () => {
 
 decimal.addEventListener("click", () => {
     appendValue(".");
+    decimal.disabled = true;
 });
 
 equal.addEventListener("click", ()=> {
@@ -127,13 +145,13 @@ equal.addEventListener("click", ()=> {
         secondNum = pastNum;
     }
     else{
-        secondNum = +displayText;
+        secondNum = displayText;
     }
     operate();
-    totalDisplay += "=";
-    appendValue(firstNum);
     resetForNext();
     didCalc = true;
+    newLine = true;
+    displayText = "ans";
 });
 
 function add(a,b)
@@ -157,8 +175,16 @@ function divide(a,b)
     return answer.toFixed(2);
 }
 
+
 function operate()
 {
+    if(secondNum == "0" && operator =='÷')
+    {
+        let clickEvent = new Event("click");
+        alert("YOU CAN NOT DIVIDE BY ZERO");
+        clear.dispatchEvent(clickEvent);
+        return;
+    }
     previousFirst = firstNum;
     previousSecond = secondNum;
     previousOperator = operator;
@@ -187,4 +213,6 @@ function operate()
 
     previous.classList.remove("hidden");
      previous.textContent = `${previousFirst} ${previousOperator} ${previousSecond} = ${answer}`;
+     appendValue("=");
+    appendValue(firstNum);
 }

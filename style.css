@@ -24,6 +24,10 @@ button .op {
     font-size: 30px;
 }
 
+img:hover{
+    transform: rotate(180deg);
+}
+
 .calculator {
     background-color: rgba(9, 0, 0, 0.825);
     max-width: 500px;
@@ -42,7 +46,6 @@ h1 {
     text-align: center;
     margin: 10px;
 }
-
 
 
 .calculator .display {
