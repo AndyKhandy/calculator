@@ -85,7 +85,7 @@ numbers.forEach(btn => {
     btn.addEventListener("click", () => {
        if(displayText == "0")
        {
-        displayText = btn.value;
+        displayText = btn.value
        }
        else if(second)
        {
