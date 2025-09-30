@@ -5,12 +5,15 @@ const clear = document.querySelector("#clear");
 const operators = document.querySelectorAll(".op");
 const equal = document.querySelector("#equal");
 const previous = document.querySelector("#previous");
+const ans = document.querySelector("#ans");
+const decimal = document.querySelector("#decimal");
 
 let operatorBtn = null;
 
 
 let firstNum = null;
 let secondNum = null;
+let pastNum = null;
 
 let operator = null;
 let displayText = "0";
@@ -55,6 +58,7 @@ function resetForNext()
     operator = null;
     second = false;
     secondNum = null;
+    firstNum = null;
     firstOperation = true;
 }
 
@@ -73,9 +77,13 @@ numbers.forEach(btn => {
 
 operators.forEach(btn => {
     btn.addEventListener("click", () =>{
-          if(firstNum == null)
+        if(firstNum == null)
         {
             firstNum = displayText;
+            if(firstNum == "ans")
+            {
+                firstNum = pastNum;
+            }
             displayText = "";
         }
         else if(operator)
@@ -87,7 +95,7 @@ operators.forEach(btn => {
         }
         if(didCalc)
         {
-            totalDisplay = `${firstNum}`;
+            totalDisplay = `ans`;
         }
         operator = btn.value;
         second = true;
@@ -97,14 +105,30 @@ operators.forEach(btn => {
     });
 });
 
+ans.addEventListener("click", ()=> {
+    displayText = "";
+    appendValue("ans");
+})
+
 clear.addEventListener("click", () => {
     displayText = "";
     resetForNext();
     appendValue(-1);
+    didCalc = false;
+});
+
+decimal.addEventListener("click", () => {
+    appendValue(".");
 });
 
 equal.addEventListener("click", ()=> {
-    secondNum = displayText;
+    if(displayText == "ans")
+    {
+        secondNum = pastNum;
+    }
+    else{
+        secondNum = +displayText;
+    }
     operate();
     totalDisplay += "=";
     appendValue(firstNum);
@@ -159,7 +183,8 @@ function operate()
     }
     displayText = "";
     firstNum = answer;
+    pastNum = firstNum;
 
     previous.classList.remove("hidden");
-    previous.textContent = `${previousFirst} ${previousOperator} ${previousSecond} = ${answer}`;
+     previous.textContent = `${previousFirst} ${previousOperator} ${previousSecond} = ${answer}`;
 }
