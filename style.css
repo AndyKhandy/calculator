@@ -23,8 +23,12 @@ button:hover {
 button .op {
     font-size: 30px;
 }
-
+img {
+    opacity: 0.7;
+    transition: 200ms ease in;
+}
 img:hover{
+    opacity: 1;
     transform: rotate(180deg);
 }
 

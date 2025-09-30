@@ -38,7 +38,7 @@ function appendValue(value)
     }
     else {
          if(firstOperation)
-        {
+        { 
             displayText = value;
             firstOperation = false;
         }
@@ -77,10 +77,11 @@ numbers.forEach(btn => {
             displayText = "";
             second = false;
         }
-        if(newLine && (!totalDisplay.includes("ans")))
+        if(newLine && didCalc)
         {
             totalDisplay = "";
             newLine = false;
+            didCalc = false;
         }
         appendValue(btn.value);
     });
@@ -100,8 +101,15 @@ operators.forEach(btn => {
         }
         else if(operator)
         {
+            
             operatorBtn.classList.toggle("active");
+            if(displayText == "ans")
+            {       
+            secondNum = pastNum;
+            }
+            else{
             secondNum = displayText;
+            }
             operate();
         }
         else if(didCalc)
@@ -109,6 +117,7 @@ operators.forEach(btn => {
             totalDisplay = pastNum;
             didCalc = false;
         }
+        newLine = false;
         decimal.disabled = false;
         operator = btn.value;
         second = true;
@@ -119,9 +128,10 @@ operators.forEach(btn => {
 });
 
 ans.addEventListener("click", ()=> {
-    if(didCalc)
+    if(didCalc && newLine)
     {
         totalDisplay = "";
+        didCalc = false;
     }
     displayText = "";
     appendValue("ans");
@@ -132,6 +142,7 @@ clear.addEventListener("click", () => {
     resetForNext();
     appendValue(-1);
     didCalc = false;
+    newLine = false;
 });
 
 decimal.addEventListener("click", () => {
