@@ -4,12 +4,113 @@ const numbers = document.querySelectorAll(".num");
 const clear = document.querySelector("#clear");
 const operators = document.querySelectorAll(".op");
 const equal = document.querySelector("#equal");
+const previous = document.querySelector("#previous");
+
+let operatorBtn = null;
+
 
 let firstNum = null;
 let secondNum = null;
+
 let operator = null;
-let displayText = display.textContent;
+let displayText = "0";
+let totalDisplay = "";
+
+let firstOperation = true;
 let second = false;
+let didCalc = false;
+
+let previousFirst = null;
+let previousSecond = null; 
+let previousOperator = null;
+
+function appendValue(value)
+{
+    if(value == -1)
+        {
+            displayText = "";
+            totalDisplay = "";
+            display.textContent = "0";
+    }
+    else {
+         if(firstOperation)
+        {
+            displayText = value;
+            firstOperation = false;
+        }
+        else {
+            displayText += value;
+        }
+        totalDisplay += value;
+        display.textContent = totalDisplay;
+    }
+}
+
+function resetForNext()
+{
+    if (operatorBtn != null)
+    {
+        operatorBtn.classList.remove("active");
+    }
+    operator = null;
+    second = false;
+    secondNum = null;
+    firstOperation = true;
+}
+
+
+
+numbers.forEach(btn => {
+    btn.addEventListener("click", () => {
+        if(second)
+        {
+            displayText = "";
+            second = false;
+        }
+        appendValue(btn.value);
+    });
+});
+
+operators.forEach(btn => {
+    btn.addEventListener("click", () =>{
+          if(firstNum == null)
+        {
+            firstNum = displayText;
+            displayText = "";
+        }
+        else if(operator)
+        {
+            operatorBtn.classList.toggle("active");
+            secondNum = displayText;
+            operate();
+            appendValue(firstNum);
+        }
+        if(didCalc)
+        {
+            totalDisplay = `${firstNum}`;
+        }
+        operator = btn.value;
+        second = true;
+        operatorBtn = btn;
+        operatorBtn.classList.toggle("active");
+        appendValue(btn.value);
+    });
+});
+
+clear.addEventListener("click", () => {
+    displayText = "";
+    resetForNext();
+    appendValue(-1);
+});
+
+equal.addEventListener("click", ()=> {
+    secondNum = displayText;
+    operate();
+    totalDisplay += "=";
+    appendValue(firstNum);
+    resetForNext();
+    didCalc = true;
+});
 
 function add(a,b)
 {
@@ -18,7 +119,7 @@ function add(a,b)
 
 function subtract(a,b)
 {
-    return a-b;
+    return a-b; 
 }
 
 function multiply(a,b) 
@@ -32,17 +133,14 @@ function divide(a,b)
     return answer.toFixed(2);
 }
 
-
-
-function updateDisplay()
-{
-    display.textContent = displayText || 0;
-}
-
-
-
 function operate()
 {
+    previousFirst = firstNum;
+    previousSecond = secondNum;
+    previousOperator = operator;
+
+    firstNum = +firstNum;
+    secondNum = +secondNum;
     let answer;
     switch(operator)
     {
@@ -52,67 +150,16 @@ function operate()
         case '-':
             answer = subtract(firstNum,secondNum);
             break;
-        case 'X':
+        case 'x':
             answer = multiply(firstNum,secondNum);
             break;
         case '÷':
             answer = divide(firstNum,secondNum);
             break;
     }
-    displayText = answer;
-    updateDisplay();
-    return answer;
+    displayText = "";
+    firstNum = answer;
+
+    previous.classList.remove("hidden");
+    previous.textContent = `${previousFirst} ${previousOperator} ${previousSecond} = ${answer}`;
 }
-
-clear.addEventListener("click", () => {
-    displayText = "0";
-    operator = null;
-    firstNum = null;
-    secondNum = null;
-    second = false;
-    updateDisplay();
-});
-
-equal.addEventListener("click", ()=> {
-    secondNum = +displayText;
-    firstNum = operate(operator,firstNum,secondNum)
-    operator = null;
-    second = false;
-});
-
-
-numbers.forEach(btn => {
-    btn.addEventListener("click", () => {
-       if(displayText == "0")
-       {
-        displayText = btn.value;
-       }
-       else if(second)
-       {
-        displayText = btn.value;
-        second = false;
-       }
-       else{
-        displayText += btn.value;
-       }
-        updateDisplay();
-    });
-});
-
-operators.forEach(btn => {
-    btn.addEventListener("click", () =>{
-        if(firstNum == null)
-        {
-            firstNum = +displayText;
-        }
-        else if(operator)
-        {
-            secondNum = +displayText;
-            firstNum = operate();
-        }
-        second = true;
-        operator = btn.value;
-        displayText = btn.value;
-        updateDisplay();
-    });
-});

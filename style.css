@@ -49,6 +49,15 @@ h1 {
     font-size: 50px;
 }
 
+.calculator .display #previous {
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.619);
+}
+
+.hidden {
+    display: none;
+}
+
 .calculator .main {
     background-color: rgb(0, 0, 0);
     display: flex;
@@ -64,4 +73,8 @@ h1 {
     flex: 1;
     padding: 10px;
     gap: 20px;
+}
+
+.active {
+    background-color: lightblue;
 }
