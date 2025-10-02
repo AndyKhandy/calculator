@@ -54,7 +54,6 @@ button .op {
 .calculator {
     background-color: rgba(9, 0, 0, 0.825);
     background-size: cover;
-    background-image: url("pictures/snorlaxPat.jpg");
     max-width: 500px;
     min-height: 700px;
     margin: 50px auto;

@@ -54,27 +54,11 @@ function appendValue(value)
         }
         display.textContent = totalDisplay;
     }
-
 }
 
-function resetForNext()
+function appendNumber(value)
 {
-    if (operatorBtn != null)
-    {
-        operatorBtn.classList.remove("active");
-    }
-    operator = null;
-    second = false;
-    secondNum = null;
-    firstNum = null;
-    firstOperation = true;
-}
-
-
-
-numbers.forEach(btn => {
-    btn.addEventListener("click", () => {
-        if(second)
+    if(second)
         {
             displayText = "";
             second = false;
@@ -85,13 +69,12 @@ numbers.forEach(btn => {
             newLine = false;
             didCalc = false;
         }
-        appendValue(btn.value);
-    });
-});
+    appendValue(value);
+}
 
-operators.forEach(btn => {
-    btn.addEventListener("click", () =>{
-        if(firstNum == null)
+function appendOperator(value)
+{
+    if(firstNum == null)
         {
             firstNum = displayText;
             if(firstNum == "ans")
@@ -121,11 +104,37 @@ operators.forEach(btn => {
         }
         newLine = false;
         decimal.disabled = false;
-        operator = btn.value;
+        operator = value;
         second = true;
+        appendValue(value);
+}
+
+function resetForNext()
+{
+    if (operatorBtn != null)
+    {
+        operatorBtn.classList.remove("active");
+    }
+    operator = null;
+    second = false;
+    secondNum = null;
+    firstNum = null;
+    firstOperation = true;
+}
+
+
+
+numbers.forEach(btn => {
+    btn.addEventListener("click", () => {
+        appendNumber(btn.value);
+    });
+});
+
+operators.forEach(btn => {
+    btn.addEventListener("click", () =>{
+        appendOperator(btn.value);
         operatorBtn = btn;
         operatorBtn.classList.toggle("active");
-        appendValue(btn.value);
     });
 });
 
