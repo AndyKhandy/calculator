@@ -1,4 +1,4 @@
-
+const calcDiv = document.querySelector(".calculator");
 const display = document.querySelector("#displayText");
 const numbers = document.querySelectorAll(".num");
 const clear = document.querySelector("#clear");
@@ -7,6 +7,7 @@ const equal = document.querySelector("#equal");
 const previous = document.querySelector("#previous");
 const ans = document.querySelector("#ans");
 const decimal = document.querySelector("#decimal");
+const stickers = document.querySelectorAll(".sticker");
 
 let operatorBtn = null;
 
@@ -127,6 +128,38 @@ operators.forEach(btn => {
     });
 });
 
+let pipclick = 0;
+let snorClick = 0;
+
+stickers.forEach((sticker) => {
+    sticker.addEventListener("click", () => {
+        let pokeName = sticker.value;
+        if(pokeName == "snor")
+        {
+        calcDiv.style["background-image"] = "url(pictures/snorlaxPat.jpg)";
+        stickers[1].classList.remove("active");
+        snorClick++;
+        pipClick = 0;
+        }
+    else if(pokeName == "pip"){
+        calcDiv.style["background-image"] = "url(pictures/piplupPat.jpg)";
+        
+        stickers[0].classList.remove("active");
+        pipClick++;
+        snorClick = 0;
+        } 
+        
+        if(pipClick == 2 || snorClick == 2)
+        {
+            calcDiv.style["background-image"] = "none";
+            pipClick = 0;
+            snorClick = 0;
+        }
+        sticker.classList.toggle("active");
+    });
+});
+
+
 ans.addEventListener("click", ()=> {
     if(didCalc && newLine)
     {
@@ -164,6 +197,7 @@ equal.addEventListener("click", ()=> {
     newLine = true;
     displayText = "ans";
 });
+
 
 function add(a,b)
 {
