@@ -11,9 +11,9 @@ const stickers = document.querySelectorAll(".sticker");
 const allBtns = document.querySelectorAll("button");
 
 let operatorBtn = null;
-
-
-let firstNum = null;
+let clickEvent = new Event("click");
+  
+let firstNum = null;  
 let secondNum = null;
 let pastNum = null;
 
@@ -48,50 +48,33 @@ function appendValue(value)
             displayText += value;
         }
         totalDisplay += value;
-        if(totalDisplay.length > 15)
+        if(totalDisplay.length > 20)
         {
             totalDisplay = totalDisplay.slice(6);
+            display.style["font-size"] = "32px";
+        }
+        else if(totalDisplay.length < 20)
+        {
+            display.style["font-size"] = "50px";
         }
         display.textContent = totalDisplay;
     }
-
 }
 
-function resetForNext()
+function appendNumber(value)
 {
-    if (operatorBtn != null)
-    {
-        operatorBtn.classList.remove("active");
-    }
-    operator = null;
-    second = false;
-    secondNum = null;
-    firstNum = null;
-    firstOperation = true;
-}
-
-
-
-numbers.forEach(btn => {
-    btn.addEventListener("click", () => {
-        if(second)
-        {
-            displayText = "";
-            second = false;
-        }
         if(newLine && didCalc)
         {
             totalDisplay = "";
             newLine = false;
             didCalc = false;
         }
-        appendValue(btn.value);
-    });
-});
+    appendValue(value);
+}
 
-operators.forEach(btn => {
-    btn.addEventListener("click", () =>{
-        if(firstNum == null)
+function appendOperator(value)
+{
+    if(firstNum == null)
         {
             firstNum = displayText;
             if(firstNum == "ans")
@@ -121,11 +104,79 @@ operators.forEach(btn => {
         }
         newLine = false;
         decimal.disabled = false;
-        operator = btn.value;
+        if(value == '/')
+        {
+            value = '÷';
+        }
+        else if(value == 'x' || value == '*')
+        {
+            value = 'x';
+        }
+        operator = value;
         second = true;
+        appendValue(value);
+        displayText = "";
+}
+
+function resetForNext()
+{
+    if (operatorBtn != null)
+    {
+        operatorBtn.classList.remove("active");
+    }
+    operator = null;
+    second = false;
+    secondNum = null;
+    firstNum = null;
+    firstOperation = true;
+}
+
+function enterEquation()
+{
+    if(displayText == "ans")
+    {
+        secondNum = pastNum;
+    }
+    else{
+        secondNum = displayText;
+    }
+    operate();
+    resetForNext();
+    didCalc = true;
+    newLine = true;
+    displayText = "ans";
+}
+
+window.addEventListener("keydown", (e)=>{
+    if(e.key >= 0 && e.key <= 9)
+    {
+        appendNumber(e.key);
+    }
+    if(e.key === '+' || e.key === '-' || e.key === 'x' || e.key == '*' || e.key == '/')
+    {
+        appendOperator(e.key);
+    }
+    if(e.key == "Enter")
+    {
+        enterEquation();
+    }
+    if(e.key == "." && decimal.disabled == false)
+    {
+        decimal.dispatchEvent(clickEvent);
+    }
+});
+
+numbers.forEach(btn => {
+    btn.addEventListener("mousedown", () => {
+        appendNumber(btn.value);
+    });
+});
+
+operators.forEach(btn => {
+    btn.addEventListener("mousedown", () =>{
+        appendOperator(btn.value);
         operatorBtn = btn;
         operatorBtn.classList.toggle("active");
-        appendValue(btn.value);
     });
 });
 
@@ -177,7 +228,7 @@ stickers.forEach((sticker) => {
 });
 
 
-ans.addEventListener("click", ()=> {
+ans.addEventListener("mousedown", ()=> {
     if(didCalc && newLine)
     {
         totalDisplay = "";
@@ -187,32 +238,25 @@ ans.addEventListener("click", ()=> {
     appendValue("ans");
 })
 
-clear.addEventListener("click", () => {
+clear.addEventListener("mousedown", () => {
     displayText = "";
-    resetForNext();
+    resetForNext(); 
     appendValue(-1);
     didCalc = false;
     newLine = false;
 });
 
 decimal.addEventListener("click", () => {
+    if(!displayText)
+    {
+        appendValue("0");
+    }
     appendValue(".");
     decimal.disabled = true;
 });
 
 equal.addEventListener("click", ()=> {
-    if(displayText == "ans")
-    {
-        secondNum = pastNum;
-    }
-    else{
-        secondNum = displayText;
-    }
-    operate();
-    resetForNext();
-    didCalc = true;
-    newLine = true;
-    displayText = "ans";
+    enterEquation();
 });
 
 
@@ -242,7 +286,6 @@ function operate()
 {
     if(secondNum == "0" && operator =='÷')
     {
-        let clickEvent = new Event("click");
         alert("YOU CAN NOT DIVIDE BY ZERO");
         clear.dispatchEvent(clickEvent);
         return;
@@ -269,6 +312,7 @@ function operate()
             answer = divide(firstNum,secondNum);
             break;
     }
+    ansewr = ((answer*10)/10);
     displayText = "";
     firstNum = answer;
     pastNum = firstNum;
