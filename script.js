@@ -8,6 +8,7 @@ const previous = document.querySelector("#previous");
 const ans = document.querySelector("#ans");
 const decimal = document.querySelector("#decimal");
 const stickers = document.querySelectorAll(".sticker");
+const allBtns = document.querySelectorAll("button");
 
 let operatorBtn = null;
 
@@ -128,7 +129,7 @@ operators.forEach(btn => {
     });
 });
 
-let pipclick = 0;
+let pipClick = 0;
 let snorClick = 0;
 
 stickers.forEach((sticker) => {
@@ -143,18 +144,34 @@ stickers.forEach((sticker) => {
         }
     else if(pokeName == "pip"){
         calcDiv.style["background-image"] = "url(pictures/piplupPat.jpg)";
-        
+
         stickers[0].classList.remove("active");
         pipClick++;
         snorClick = 0;
+
         } 
-        
+
         if(pipClick == 2 || snorClick == 2)
         {
             calcDiv.style["background-image"] = "none";
             pipClick = 0;
             snorClick = 0;
         }
+
+        allBtns.forEach(btn => {
+            if(pipClick) 
+            {
+                btn.style["background-color"] = "rgb(48, 125, 193)";
+            }
+            else if(snorClick) 
+            {
+                btn.style["background-color"] = "rgba(76, 146, 108, 1)";
+            }
+            else {
+                btn.style["background-color"] = "rgb(6, 54, 177)";
+            }
+        });
+
         sticker.classList.toggle("active");
     });
 });
