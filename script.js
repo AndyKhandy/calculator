@@ -104,6 +104,14 @@ function appendOperator(value)
         }
         newLine = false;
         decimal.disabled = false;
+        if(value == '/')
+        {
+            value = '÷';
+        }
+        else if(value == 'x' || value == '*')
+        {
+            value = 'x';
+        }
         operator = value;
         second = true;
         appendValue(value);
@@ -122,16 +130,45 @@ function resetForNext()
     firstOperation = true;
 }
 
+function enterEquation()
+{
+    if(displayText == "ans")
+    {
+        secondNum = pastNum;
+    }
+    else{
+        secondNum = displayText;
+    }
+    operate();
+    resetForNext();
+    didCalc = true;
+    newLine = true;
+    displayText = "ans";
+}
 
+window.addEventListener("keydown", (e)=>{
+    if(e.key >= 0 && e.key <= 9)
+    {
+        appendNumber(e.key);
+    }
+    if(e.key === '+' || e.key === '-' || e.key === 'x' || e.key == '*' || e.key == '/')
+    {
+        appendOperator(e.key);
+    }
+    if(e.key == "Enter")
+    {
+        enterEquation();
+    }
+});
 
 numbers.forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("mousedown", () => {
         appendNumber(btn.value);
     });
 });
 
 operators.forEach(btn => {
-    btn.addEventListener("click", () =>{
+    btn.addEventListener("mousedown", () =>{
         appendOperator(btn.value);
         operatorBtn = btn;
         operatorBtn.classList.toggle("active");
@@ -186,7 +223,7 @@ stickers.forEach((sticker) => {
 });
 
 
-ans.addEventListener("click", ()=> {
+ans.addEventListener("mousedown", ()=> {
     if(didCalc && newLine)
     {
         totalDisplay = "";
@@ -196,7 +233,7 @@ ans.addEventListener("click", ()=> {
     appendValue("ans");
 })
 
-clear.addEventListener("click", () => {
+clear.addEventListener("mousedown", () => {
     displayText = "";
     resetForNext();
     appendValue(-1);
@@ -210,18 +247,7 @@ decimal.addEventListener("click", () => {
 });
 
 equal.addEventListener("click", ()=> {
-    if(displayText == "ans")
-    {
-        secondNum = pastNum;
-    }
-    else{
-        secondNum = displayText;
-    }
-    operate();
-    resetForNext();
-    didCalc = true;
-    newLine = true;
-    displayText = "ans";
+    enterEquation();
 });
 
 
