@@ -11,9 +11,9 @@ const stickers = document.querySelectorAll(".sticker");
 const allBtns = document.querySelectorAll("button");
 
 let operatorBtn = null;
-
-
-let firstNum = null;
+let clickEvent = new Event("click");
+  
+let firstNum = null;  
 let secondNum = null;
 let pastNum = null;
 
@@ -48,9 +48,14 @@ function appendValue(value)
             displayText += value;
         }
         totalDisplay += value;
-        if(totalDisplay.length > 15)
+        if(totalDisplay.length > 20)
         {
             totalDisplay = totalDisplay.slice(6);
+            display.style["font-size"] = "32px";
+        }
+        else if(totalDisplay.length < 20)
+        {
+            display.style["font-size"] = "50px";
         }
         display.textContent = totalDisplay;
     }
@@ -58,11 +63,6 @@ function appendValue(value)
 
 function appendNumber(value)
 {
-    if(second)
-        {
-            displayText = "";
-            second = false;
-        }
         if(newLine && didCalc)
         {
             totalDisplay = "";
@@ -115,6 +115,7 @@ function appendOperator(value)
         operator = value;
         second = true;
         appendValue(value);
+        displayText = "";
 }
 
 function resetForNext()
@@ -158,6 +159,10 @@ window.addEventListener("keydown", (e)=>{
     if(e.key == "Enter")
     {
         enterEquation();
+    }
+    if(e.key == "." && decimal.disabled == false)
+    {
+        decimal.dispatchEvent(clickEvent);
     }
 });
 
@@ -235,13 +240,17 @@ ans.addEventListener("mousedown", ()=> {
 
 clear.addEventListener("mousedown", () => {
     displayText = "";
-    resetForNext();
+    resetForNext(); 
     appendValue(-1);
     didCalc = false;
     newLine = false;
 });
 
 decimal.addEventListener("click", () => {
+    if(!displayText)
+    {
+        appendValue("0");
+    }
     appendValue(".");
     decimal.disabled = true;
 });
@@ -277,7 +286,6 @@ function operate()
 {
     if(secondNum == "0" && operator =='÷')
     {
-        let clickEvent = new Event("click");
         alert("YOU CAN NOT DIVIDE BY ZERO");
         clear.dispatchEvent(clickEvent);
         return;
@@ -304,6 +312,7 @@ function operate()
             answer = divide(firstNum,secondNum);
             break;
     }
+    ansewr = ((answer*10)/10);
     displayText = "";
     firstNum = answer;
     pastNum = firstNum;
