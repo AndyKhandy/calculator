@@ -11,7 +11,7 @@ const stickers = document.querySelectorAll(".sticker");
 const allBtns = document.querySelectorAll("button");
 
 let operatorBtn = null;
-let clickEvent = new Event("click");
+let mouseEvent = new Event("mousedown");
   
 let firstNum = null;  
 let secondNum = null;
@@ -25,6 +25,7 @@ let firstOperation = true;
 let second = false;
 let didCalc = false;
 let newLine = false;
+let didBackspace = false;
 
 let previousFirst = null;
 let previousSecond = null; 
@@ -48,7 +49,7 @@ function appendValue(value)
             displayText += value;
         }
         totalDisplay += value;
-        if(totalDisplay.length > 20)
+        if(totalDisplay.length > 18)
         {
             totalDisplay = totalDisplay.slice(6);
             display.style["font-size"] = "32px";
@@ -57,13 +58,18 @@ function appendValue(value)
         {
             display.style["font-size"] = "50px";
         }
-        display.textContent = totalDisplay;
+        displayValue();
     }
+}
+
+function displayValue()
+{
+    display.textContent = totalDisplay;
 }
 
 function appendNumber(value)
 {
-        if(newLine && didCalc)
+        if(newLine && didCalc && !didBackspace)
         {
             totalDisplay = "";
             newLine = false;
@@ -125,10 +131,11 @@ function resetForNext()
         operatorBtn.classList.remove("active");
     }
     operator = null;
-    second = false;
+    second = false; 
+    firstOperation = true;
     secondNum = null;
     firstNum = null;
-    firstOperation = true;
+    decimal.disabled = false;
 }
 
 function enterEquation()
@@ -145,6 +152,59 @@ function enterEquation()
     didCalc = true;
     newLine = true;
     displayText = "ans";
+    didBackspace = false;
+}
+
+function backspace()
+{
+    //splits the totalDisplay into the first number and second number if there is an operator between them
+    let operations = totalDisplay.split(`${operator}`);
+    let lastCharacter = totalDisplay.at(-1);
+
+    if(totalDisplay === "")
+    {
+        return; 
+    }
+    else{
+        decimal.disabled = false;
+        //Means that there is only one string or in this case only the first number
+        if(operations.length === 1)
+        {
+            if(lastCharacter == 's')
+                {
+            totalDisplay = displayText = operations[0].slice(0, totalDisplay.length-3);
+                }
+            else{
+            totalDisplay = displayText =  operations[0].slice(0,-1);
+            }
+
+            if(displayText.length === 0)
+            {
+                totalDisplay = "0";
+            }
+        }
+        //Means that there is two strings. One before the operator sign (first number) and one after (second number)
+        else if(operations.length === 2)
+        {
+            let newDisplay;
+            //if the last word + action contains ans then ans is completely deleted
+            if(lastCharacter == 's')
+                {
+            newDisplay = operations[1].slice(0, totalDisplay.length-3);
+            displayText = newDisplay;
+            totalDisplay = operations[0] + opeartor + newDisplay;
+                }
+            else{
+                //reformat the totalDisplay with the new look
+                newDisplay = operations[1].slice(0,-1);
+                displayText = newDisplay;
+            totalDisplay = operations[0] + operator + newDisplay;
+            }
+        }
+        displayValue();
+        didBackspace = true;
+    }
+   
 }
 
 window.addEventListener("keydown", (e)=>{
@@ -156,13 +216,17 @@ window.addEventListener("keydown", (e)=>{
     {
         appendOperator(e.key);
     }
-    if(e.key == "Enter")
+    if(e.key == "Enter" || e.key == "=")
     {
         enterEquation();
     }
     if(e.key == "." && decimal.disabled == false)
     {
-        decimal.dispatchEvent(clickEvent);
+        decimal.dispatchEvent(mouseEvent);
+    }
+    if(e.key == "Backspace")
+    {
+        backspace();
     }
 });
 
@@ -184,7 +248,7 @@ let pipClick = 0;
 let snorClick = 0;
 
 stickers.forEach((sticker) => {
-    sticker.addEventListener("click", () => {
+    sticker.addEventListener("mousedown", () => {
         let pokeName = sticker.value;
         if(pokeName == "snor")
         {
@@ -246,7 +310,7 @@ clear.addEventListener("mousedown", () => {
     newLine = false;
 });
 
-decimal.addEventListener("click", () => {
+decimal.addEventListener("mousedown", () => {
     if(!displayText)
     {
         appendValue("0");
@@ -255,7 +319,7 @@ decimal.addEventListener("click", () => {
     decimal.disabled = true;
 });
 
-equal.addEventListener("click", ()=> {
+equal.addEventListener("mousedown", ()=> {
     enterEquation();
 });
 
@@ -287,7 +351,7 @@ function operate()
     if(secondNum == "0" && operator =='÷')
     {
         alert("YOU CAN NOT DIVIDE BY ZERO");
-        clear.dispatchEvent(clickEvent);
+        clear.dispatchEvent(mouseEvent);
         return;
     }
     previousFirst = firstNum;
@@ -312,7 +376,7 @@ function operate()
             answer = divide(firstNum,secondNum);
             break;
     }
-    ansewr = ((answer*10)/10);
+    answer = Math.round(answer*100)/100;
     displayText = "";
     firstNum = answer;
     pastNum = firstNum;
