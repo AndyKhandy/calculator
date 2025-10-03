@@ -82,6 +82,7 @@ function appendNumber(value)
 
 function appendOperator(value)
 {
+    
     if(firstNum == null)
         {
             firstNum = displayText;
@@ -108,8 +109,8 @@ function appendOperator(value)
         else if(didCalc)
         {
             totalDisplay = pastNum;
-            didCalc = false;
         }
+        didCalc = false;
         newLine = false;
         decimal.disabled = false;
         signChange.disabled = false;
@@ -162,7 +163,7 @@ function enterEquation()
 function backspace()
 {
     //splits the totalDisplay into the first number and second number if there is an operator between them
-    let operations = totalDisplay.split(`${operator}`);
+    let indexOP = totalDisplay.indexOf(operator)
     let lastCharacter = totalDisplay.at(-1);
 
     if(totalDisplay === "" || didCalc)
@@ -172,40 +173,54 @@ function backspace()
     else{
         decimal.disabled = false;
         signChange.disabled = false;
-        //Means that there is only one string or in this case only the first number
-        if(operations.length === 1)
+
+        //means that the user is trying to backspace on the operator
+        if(totalDisplay.length-1 == indexOP)
+        {
+            operator = null;
+            second = false;
+            totalDisplay = totalDisplay.slice(0, indexOP);
+            displayText = "";
+        }
+        //means that there is a second number
+        else if(totalDisplay.length-1 > indexOP && indexOP != -1)
+        {
+            //if the last word + action contains ans then ans is completely deleted
+            if(lastCharacter == 's')
+                {
+            totalDisplay = totalDisplay.slice(0, totalDisplay.length-3);
+            displayText = "";
+                }
+            else{
+                //reformat the totalDisplay with the new look
+            totalDisplay = totalDisplay.slice(0,-1);
+            if(totalDisplay.length-1 == indexOP)
+            {
+                displayText = "";
+            }
+            else{
+                displayText = totalDisplay.slice(indexOP);
+            }
+            }
+        }
+        //means there is no operator (first number)
+        else if(indexOP == -1)
         {
             if(lastCharacter == 's')
                 {
-            totalDisplay = displayText = operations[0].slice(0, totalDisplay.length-3);
+            totalDisplay = displayText = totalDisplay.slice(0, totalDisplay.length-3);
                 }
             else{
-            totalDisplay = displayText =  operations[0].slice(0,-1);
+            totalDisplay = displayText =  totalDisplay.slice(0,-1);
             }
+            firstNum = null;
 
             if(displayText.length === 0)
             {
                 totalDisplay = "0";
             }
         }
-        //Means that there is two strings. One before the operator sign (first number) and one after (second number)
-        else if(operations.length === 2)
-        {
-            let newDisplay;
-            //if the last word + action contains ans then ans is completely deleted
-            if(lastCharacter == 's')
-                {
-            newDisplay = operations[1].slice(0, totalDisplay.length-3);
-            displayText = newDisplay;
-            totalDisplay = operations[0] + opeartor + newDisplay;
-                }
-            else{
-                //reformat the totalDisplay with the new look
-                newDisplay = operations[1].slice(0,-1);
-                displayText = newDisplay;
-            totalDisplay = operations[0] + operator + newDisplay;
-            }
-        }
+
         displayValue();
         didBackspace = true;
     }
