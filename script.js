@@ -9,6 +9,8 @@ const ans = document.querySelector("#ans");
 const decimal = document.querySelector("#decimal");
 const stickers = document.querySelectorAll(".sticker");
 const allBtns = document.querySelectorAll("button");
+const backSpace = document.querySelector("#backspace");
+const signChange = document.querySelector("#sign");
 
 let operatorBtn = null;
 let mouseEvent = new Event("mousedown");
@@ -110,6 +112,7 @@ function appendOperator(value)
         }
         newLine = false;
         decimal.disabled = false;
+        signChange.disabled = false;
         if(value == '/')
         {
             value = '÷';
@@ -136,6 +139,7 @@ function resetForNext()
     secondNum = null;
     firstNum = null;
     decimal.disabled = false;
+    signChange.disabled = false;
 }
 
 function enterEquation()
@@ -167,6 +171,7 @@ function backspace()
     }
     else{
         decimal.disabled = false;
+        signChange.disabled = false;
         //Means that there is only one string or in this case only the first number
         if(operations.length === 1)
         {
@@ -242,6 +247,12 @@ operators.forEach(btn => {
         operatorBtn = btn;
         operatorBtn.classList.toggle("active");
     });
+});
+
+backSpace.addEventListener("mousedown", backspace);
+
+signChange.addEventListener("mousedown", () =>{
+    appendNumber("-");
 });
 
 let pipClick = 0;

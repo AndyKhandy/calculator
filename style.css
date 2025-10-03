@@ -11,14 +11,14 @@ button {
     height: 55px;
     font-size: 25px;
     background-color: rgb(6, 54, 177);
-    
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.627);
     border-radius:30px;
+    cursor: pointer;
 }
 
 button:hover {
-    opacity: 0.9;
+    opacity: 0.8;
     background-color:rgba(47, 120, 149, 0.529);
 }
 
@@ -36,13 +36,15 @@ button .op {
     background-size: contain;
 }
 
-.sticker {
-    opacity: 0.7;
-    transition: 200ms ease in;
+#backspace {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sticker {
     border-radius: 10px;
+    transition: 200ms ease in;
 }
 
 .sticker:hover{
@@ -75,8 +77,6 @@ h1 {
     width: 100%;
 }
 
-
-
 .calculator .display {
     background-color: rgb(194, 212, 76);
     padding: 20px;
@@ -96,25 +96,37 @@ h1 {
 .calculator .main {
     background-color: rgb(7, 0, 0);
     display: flex;
-    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    flex-grow: 1;
     border-radius: 5px;
     padding: 10px;
 }
 
-.calculator .main .buttons .focus, .extra
-{
+.stickers{
     display: flex;
-    align-content: space-evenly;
-    flex-flow: row wrap;
-    flex: 1;
-    padding: 10px;
-    gap: 20px;
+    width: 60%;
+    justify-content: center;
+    gap: 30px;
+    margin: 0px auto 10px auto;
+    background-color: #f2f2f9db;
+    padding: 5px;
+    border-radius: 20px;
 }
 
-.main .buttons .extra {
-    align-content: center;
-    justify-content: flex-end;
+hr {
+    height: 2px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
+.buttons {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 10px
 }
 
 .active {

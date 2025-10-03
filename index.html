@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,400,0,0&icon_names=backspace" />
 </head>
 <body>
 
@@ -20,23 +21,32 @@
         </div>
 
         <div class="main">
-            <div class="buttons">
-                <div class="extra">
-                <button class="sticker" id="snorlax" value="snor">
-
-                </button>
+            <div class="stickers">
+                <button class="sticker" id="snorlax" value="snor"></button>
 
                 <button class="sticker" id="piplup" value="pip">
                 </button>
 
+            </div>
+
+            <hr>
+
+            <div class="buttons">
+
+
+                <div><button id="backspace"><span class="material-symbols-outlined">
+                backspace
+                </span></button></div>
 
                  <div><button id="ans" value ="ans">ans</button></div>
 
-                <div><button id="clear" value = "clear">clear</button></div>
-
+                 <div>
+                    <button id="equal" value = "=">=</button>
                 </div>
 
-                <div class="focus">
+                <div><button id="clear" value = "clear">AC</button></div>
+
+            
 
                 <div>
                     <button class="num" value = "7">7</button>
@@ -92,16 +102,12 @@
 
                 <div><button id="decimal" value=".">.</button></div>
 
-                <div>
-                    <button id="equal" value = "=">=</button>
-                </div>
+                <div><button id="sign">+/-</button></div>
 
                 <div >
                     <button class = "op" value = "+">+</button>
                 </div>
-                </div>
 
-            </div>
             
 
         </div>
