@@ -165,7 +165,7 @@ function backspace()
     let operations = totalDisplay.split(`${operator}`);
     let lastCharacter = totalDisplay.at(-1);
 
-    if(totalDisplay === "")
+    if(totalDisplay === "" || didCalc)
     {
         return; 
     }
@@ -257,6 +257,7 @@ signChange.addEventListener("mousedown", () =>{
 
 let pipClick = 0;
 let snorClick = 0;
+let genClick = 0;
 
 stickers.forEach((sticker) => {
     sticker.addEventListener("mousedown", () => {
@@ -265,23 +266,36 @@ stickers.forEach((sticker) => {
         {
         calcDiv.style["background-image"] = "url(pictures/snorlaxPat.jpg)";
         stickers[1].classList.remove("active");
+        stickers[2].classList.remove("active");
         snorClick++;
         pipClick = 0;
+        genClick = 0;
         }
     else if(pokeName == "pip"){
         calcDiv.style["background-image"] = "url(pictures/piplupPat.jpg)";
 
         stickers[0].classList.remove("active");
+        stickers[2].classList.remove("active");
         pipClick++;
         snorClick = 0;
+        genClick = 0;
+        }
+    else if(pokeName == "gen"){
+        calcDiv.style["background-image"] = "url(pictures/gengarPat.jpg)";
 
-        } 
+        stickers[0].classList.remove("active");
+        stickers[1].classList.remove("active");
+        genClick++;
+        pipClick = 0;
+        snorClick = 0;
+    }
 
-        if(pipClick == 2 || snorClick == 2)
+        if(pipClick == 2 || snorClick == 2 || genClick == 2)
         {
             calcDiv.style["background-image"] = "none";
             pipClick = 0;
             snorClick = 0;
+            genClick = 0;
         }
 
         allBtns.forEach(btn => {
@@ -292,6 +306,10 @@ stickers.forEach((sticker) => {
             else if(snorClick) 
             {
                 btn.style["background-color"] = "rgba(76, 146, 108, 1)";
+            }
+            else if(genClick)
+            { 
+                btn.style["background-color"] = "rgba(208, 152, 48, 1)";
             }
             else {
                 btn.style["background-color"] = "rgb(6, 54, 177)";
