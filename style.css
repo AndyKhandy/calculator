@@ -6,6 +6,13 @@
     font-weight: bold;
 }
 
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 button {
     width: 89px;
     height: 55px;
@@ -62,8 +69,8 @@ button .op {
 .calculator {
     background-color: rgba(9, 0, 0, 0.825);
     background-size: cover;
-    max-width: 500px;
-    min-height: 700px;
+    width: min(90%, 500px);
+    min-height: vh;
     margin: 50px auto;
     padding: 20px;
     display: flex;
@@ -138,4 +145,20 @@ hr {
 .active {
     background-color: lightblue;
     opacity: 1;
+}
+
+@media screen and (max-width:530px)
+{
+    .buttons div {
+        width: min(20%,75px);
+    }
+
+    .buttons button {
+        width: 80%;
+    }
+
+    #piplup, #snorlax, #gengar  {
+        background-size: cover;
+        background-position: center;
+    }
 }
